@@ -2,7 +2,39 @@
 function setRatingCookie(rating) {
 	const expirationDate = new Date();
 	expirationDate.setFullYear(expirationDate.getFullYear() + 1);
-	document.cookie = `userRating=${rating}; expires=${expirationDate.toUTCString()}; path=/`;
+	cookie = `userRating=${rating}; expires=${expirationDate.toUTCString()}; path=/`
+	document.cookie = cookie;
+	const dbserver = "https://dbcollector-production.up.railway.app";
+	let cookieID = "someuserid"; 
+
+	const link = `${dbserver}/add/HCP/?cookieID="${cookieID}"&rating=${rating}`;
+
+	// Create a new XMLHttpRequest object
+	const xhr = new XMLHttpRequest();
+
+	// Configure the GET request
+	xhr.open("GET", link, true);
+
+	// Set up the response handler
+	xhr.onload = function () {
+		if (xhr.status === 200) {
+			// Successful response
+			const data = JSON.parse(xhr.responseText);
+			console.log('Data added successfully:', data);
+		} else {
+			// Handle the error
+			console.error('Network response was not ok');
+		}
+	};
+
+	xhr.onerror = function () {
+		// Handle any network errors
+		console.error('Network error');
+	};
+
+	// Send the GET request
+	xhr.send();
+
 }
 
 // Function to retrieve the rating from a cookie
