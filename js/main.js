@@ -8,32 +8,21 @@ function setRatingCookie(rating) {
 	let cookieID = "someuserid"; 
 
 	const link = `${dbserver}/add/HCP/?cookieID="${cookieID}"&rating=${rating}`;
-
-	// Create a new XMLHttpRequest object
-	const xhr = new XMLHttpRequest();
-
-	// Configure the GET request
-	xhr.open("GET", link, true);
-
-	// Set up the response handler
-	xhr.onload = function () {
-		if (xhr.status === 200) {
-			// Successful response
-			const data = JSON.parse(xhr.responseText);
-			console.log('Data added successfully:', data);
-		} else {
-			// Handle the error
-			console.error('Network response was not ok');
-		}
-	};
-
-	xhr.onerror = function () {
-		// Handle any network errors
-		console.error('Network error');
-	};
-
-	// Send the GET request
-	xhr.send();
+	fetch(link)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json(); // You can parse the response if needed
+  })
+  .then(data => {
+    // Handle the response data if necessary
+    console.log('Data added successfully:', data);
+  })
+  .catch(error => {
+    // Handle any errors that occurred during the fetch
+    console.error('Fetch error:', error);
+  });
 
 }
 
